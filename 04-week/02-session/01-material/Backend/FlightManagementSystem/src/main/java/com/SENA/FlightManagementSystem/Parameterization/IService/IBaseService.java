@@ -24,7 +24,7 @@ public interface IBaseService<T extends ABaseEntity> {
      * @return An Optional containing the entity, or empty if not found.
      * @throws Exception If an error occurs while retrieving the entity.
      */
-    Optional<T> findById(Long id) throws Exception;
+    Optional<T> findById(String id) throws Exception;
 
     /**
      * Saves an entity.
@@ -40,12 +40,12 @@ public interface IBaseService<T extends ABaseEntity> {
      * @param entity The updated entity.
      * @throws Exception If an error occurs while updating the entity.
      */
-    void update(Long id, T entity) throws Exception;
+    void update(String id, T entity) throws Exception;
 
     /**
      * Deletes an entity by its ID.
      * @param id The ID of the entity to delete.
      * @throws Exception If an error occurs while deleting the entity.
      */
-    void delete(Long id) throws Exception;
+    void delete(String id) throws Exception;
 }

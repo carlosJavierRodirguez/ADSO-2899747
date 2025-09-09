@@ -1,12 +1,12 @@
-package com.SENA.FlightManagementSystem.Parameterization.IService;
+package com.SENA.FlightManagementSystem.Geolocation.IService;
+
+import com.SENA.FlightManagementSystem.Geolocation.Entity.ABaseEntityGeo;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.SENA.FlightManagementSystem.Parameterization.Entity.ABaseEntity;
-
-public interface IBaseService<T extends ABaseEntity> {
-     /**
+public interface IBaseServiceGeolocation<T extends ABaseEntityGeo> {
+    /**
      * Retrieves all entities.
      * @return A list of all entities.
      * @throws Exception If an error occurs while retrieving the entities.

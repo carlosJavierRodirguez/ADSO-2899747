@@ -1,11 +1,10 @@
-package com.SENA.FlightManagementSystem.Parameterization.IService;
-
+package com.SENA.FlightManagementSystem.Notifications.IService;
 import java.util.List;
 import java.util.Optional;
 
-import com.SENA.FlightManagementSystem.Parameterization.Entity.ABaseEntity;
+import com.SENA.FlightManagementSystem.Notifications.Entity.ANotificationBaseEntity;
 
-public interface IBaseService<T extends ABaseEntity> {
+public interface INotificationBaseService<T extends ANotificationBaseEntity> {
      /**
      * Retrieves all entities.
      * @return A list of all entities.

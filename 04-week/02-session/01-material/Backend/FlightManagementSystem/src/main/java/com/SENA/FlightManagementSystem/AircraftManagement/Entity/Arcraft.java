@@ -7,6 +7,6 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name ="aircraft", schema = "aircraft_management")
 @Schema(name = "aircraft_management", description = "Entidad que representa la gestión de aeronaves")
-public class Arcraft extends ABaseEntity{
+public class Arcraft extends AAircraftManagementBaseEntity {
     
 }

@@ -1,12 +1,13 @@
-package com.SENA.FlightManagementSystem.Parameterization.IService;
+package com.SENA.FlightManagementSystem.HumanResources.IService;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.SENA.FlightManagementSystem.Parameterization.Entity.ABaseEntity;
+import com.SENA.FlightManagementSystem.HumanResources.Entity.AHumanResourcesBaseEntity;
 
-public interface IBaseService<T extends ABaseEntity> {
-     /**
+public interface IHumanResourcesBaseService<T extends AHumanResourcesBaseEntity>{
+    // Métodos comunes para servicios
+         /**
      * Retrieves all entities.
      * @return A list of all entities.
      * @throws Exception If an error occurs while retrieving the entities.

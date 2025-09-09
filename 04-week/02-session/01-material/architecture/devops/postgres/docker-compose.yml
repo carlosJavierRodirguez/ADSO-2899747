@@ -7,8 +7,9 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PASSWORD: abcd1234
       POSTGRES_USER: postgres  # Usuario por defecto
+      POSTGRES_DB: flight_management
     ports:
       - "5433:5432"
     networks:

@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "passenger", schema = "passengersServices")
+@Table(name = "passenger", schema = "passengers_services")
 @Schema(description = "Clase que representa un pasajero")
 @Data
 public class Passenger extends APassengersServicesBaseEntity {

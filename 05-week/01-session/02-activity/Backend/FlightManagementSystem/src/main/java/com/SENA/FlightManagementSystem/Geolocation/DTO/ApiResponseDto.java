@@ -2,14 +2,15 @@ package com.SENA.FlightManagementSystem.Geolocation.DTO;
 
 /**
  * This class represents a generic API response.
+ * 
  * @param <T> The type of data contained in the response.
  */
 public class ApiResponseDto<T> {
-    
+
     private Boolean status;
     private T data;
     private String message;
-    
+
     /**
      * Default constructor.
      */
@@ -18,9 +19,10 @@ public class ApiResponseDto<T> {
 
     /**
      * Constructs an ApiResponseDto with the given parameters.
+     * 
      * @param message The message describing the response.
-     * @param data The data contained in the response.
-     * @param status The status of the response.
+     * @param data    The data contained in the response.
+     * @param status  The status of the response.
      */
     public ApiResponseDto(String message, T data, Boolean status) {
         this.message = message;
@@ -30,6 +32,7 @@ public class ApiResponseDto<T> {
 
     /**
      * Retrieves the status of the response.
+     * 
      * @return The status of the response.
      */
     public Boolean getStatus() {
@@ -38,6 +41,7 @@ public class ApiResponseDto<T> {
 
     /**
      * Sets the status of the response.
+     * 
      * @param status The status of the response.
      */
     public void setStatus(Boolean status) {
@@ -46,6 +50,7 @@ public class ApiResponseDto<T> {
 
     /**
      * Retrieves the data contained in the response.
+     * 
      * @return The data contained in the response.
      */
     public T getData() {
@@ -54,6 +59,7 @@ public class ApiResponseDto<T> {
 
     /**
      * Sets the data contained in the response.
+     * 
      * @param data The data contained in the response.
      */
     public void setData(T data) {
@@ -62,6 +68,7 @@ public class ApiResponseDto<T> {
 
     /**
      * Retrieves the message describing the response.
+     * 
      * @return The message describing the response.
      */
     public String getMessage() {
@@ -70,6 +77,7 @@ public class ApiResponseDto<T> {
 
     /**
      * Sets the message describing the response.
+     * 
      * @param message The message describing the response.
      */
     public void setMessage(String message) {

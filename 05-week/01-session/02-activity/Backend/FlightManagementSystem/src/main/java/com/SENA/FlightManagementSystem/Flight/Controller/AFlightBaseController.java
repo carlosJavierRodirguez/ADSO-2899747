@@ -24,7 +24,11 @@ import com.SENA.FlightManagementSystem.Infrastructure.IService.IInfrastructureBa
  * @param <T> The type of entity extending AInfrastructureBaseEntity.
  * @param <S> The type of service implementing IInfrastructureBaseService for the entity.
  */
-public abstract class AFlightBaseController<T extends AFlightBaseEntity, S extends IFlightBaseService<T>> {
+public abstract class AFlightBaseController<
+        T extends AFlightBaseEntity,
+        S extends IFlightBaseService<T>,
+        Req,
+        Res> {
 
     protected S service;
     protected String entityName;
@@ -33,6 +37,9 @@ public abstract class AFlightBaseController<T extends AFlightBaseEntity, S exten
         this.service = service;
         this.entityName = entityName;
     }
+
+    protected abstract T convertToModel(Req dto);
+    protected abstract Res convertToDto(T entity);
 
     @GetMapping
     public ResponseEntity<ApiResponseDto<List<T>>> findByStateTrue() {
@@ -54,22 +61,27 @@ public abstract class AFlightBaseController<T extends AFlightBaseEntity, S exten
         }
     }
 
+
     @PostMapping
-    public ResponseEntity<ApiResponseDto<T>> save(@RequestBody T entity) {
+    public ResponseEntity<ApiResponseDto<Res>> save(@RequestBody Req dto) {
         try {
-            return ResponseEntity.ok(new ApiResponseDto<T>("Datos guardados", service.save(entity), true));
+            T entity = convertToModel(dto);
+            T saved = service.save(entity);
+            Res response = convertToDto(saved);
+            return ResponseEntity.ok(new ApiResponseDto<Res>("Datos guardados", response, true));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new ApiResponseDto<T>(e.getMessage(), null, false));
+            return ResponseEntity.internalServerError().body(new ApiResponseDto<Res>(e.getMessage(), null, false));
         }
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<ApiResponseDto<T>> update(@PathVariable String id, @RequestBody T entity) {
+    public ResponseEntity<ApiResponseDto<Res>> update(@PathVariable String id, @RequestBody Req dto) {
         try {
+            T entity = convertToModel(dto);
             service.update(id, entity);
-            return ResponseEntity.ok(new ApiResponseDto<T>("Datos actualizados", null, true));
+            return ResponseEntity.ok(new ApiResponseDto<Res>("Datos actualizados", null, true));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new ApiResponseDto<T>(e.getMessage(), null, false));
+            return ResponseEntity.internalServerError().body(new ApiResponseDto<Res>(e.getMessage(), null, false));
         }
     }
 

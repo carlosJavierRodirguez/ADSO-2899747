@@ -4,6 +4,6 @@ import com.SENA.FlightManagementSystem.Geolocation.DTO.BaseDTO;
 import lombok.Data;
 
 @Data
-public class ContinentResponseDto extends BaseDTO {
+public class BaseResponseDto extends BaseDTO {
     private String id;
 }

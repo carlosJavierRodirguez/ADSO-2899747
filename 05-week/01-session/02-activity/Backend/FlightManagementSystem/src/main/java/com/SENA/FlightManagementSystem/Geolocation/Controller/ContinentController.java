@@ -1,6 +1,8 @@
 package com.SENA.FlightManagementSystem.Geolocation.Controller;
 
-import com.SENA.FlightManagementSystem.Geolocation.DTO.ContinentDto;
+import com.SENA.FlightManagementSystem.Geolocation.DTO.request.ContinentRequestDto;
+import com.SENA.FlightManagementSystem.Geolocation.DTO.response.BaseResponseDto;
+import com.SENA.FlightManagementSystem.Geolocation.DTO.response.ContinentResponseDto;
 import com.SENA.FlightManagementSystem.Geolocation.Entity.Continent;
 import com.SENA.FlightManagementSystem.Geolocation.IService.IContinentService;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,14 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/continent")
-public class ContinentController extends ABaseControllerGeolocation<Continent, IContinentService, ContinentDto> {
+public class ContinentController extends ABaseControllerGeolocation<
+        Continent,
+        IContinentService,
+        ContinentRequestDto,
+        ContinentResponseDto> {
 
     public ContinentController(IContinentService service) {
         super(service, "Continent");
     }
 
     @Override
-    protected Continent convertToModel(ContinentDto dto) {
+    protected Continent convertToModel(ContinentRequestDto dto) {
         Continent entity = new Continent();
         entity.setCode(dto.getCode());
         entity.setName(dto.getName());
@@ -27,8 +33,9 @@ public class ContinentController extends ABaseControllerGeolocation<Continent, I
     }
 
     @Override
-    protected ContinentDto convertToDto(Continent entity) {
-        ContinentDto dto = new ContinentDto();
+    protected ContinentResponseDto convertToDto(Continent entity) {
+        ContinentResponseDto dto = new ContinentResponseDto();
+        dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());
@@ -36,3 +43,4 @@ public class ContinentController extends ABaseControllerGeolocation<Continent, I
         return dto;
     }
 }
+

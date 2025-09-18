@@ -1,4 +1,4 @@
-package com.SENA.FlightManagementSystem.Geolocation.DTO.request;
+package com.SENA.FlightManagementSystem.Geolocation.DTO;
 
 /**
  * DTO base con campos comunes para requests/responses de Geolocation.
@@ -6,7 +6,7 @@ package com.SENA.FlightManagementSystem.Geolocation.DTO.request;
 import lombok.Data;
 
 @Data
-public class BaseRequestDTO {
+public class BaseDTO {
     
     private String code;
     private String name;

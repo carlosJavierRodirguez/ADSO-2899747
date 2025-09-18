@@ -1,6 +1,7 @@
 package com.SENA.FlightManagementSystem.Geolocation.Controller;
 
-import com.SENA.FlightManagementSystem.Geolocation.DTO.StateDto;
+import com.SENA.FlightManagementSystem.Geolocation.DTO.request.StateRequestDto;
+import com.SENA.FlightManagementSystem.Geolocation.DTO.response.StateResponseDto;
 import com.SENA.FlightManagementSystem.Geolocation.Entity.Country;
 import com.SENA.FlightManagementSystem.Geolocation.Entity.State;
 
@@ -12,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("api/state")
-public class StateController extends ABaseControllerGeolocation<State, IStateService, StateDto> {
+public class StateController extends ABaseControllerGeolocation<State, IStateService, StateRequestDto, StateResponseDto> {
     public StateController(IStateService service) {
         super(service, "State");
     }
 
     @Override
-    protected State convertToModel(StateDto dto) {
+    protected State convertToModel(StateRequestDto dto) {
         State entity = new State();
         entity.setCode(dto.getCode());
         entity.setName(dto.getName());
@@ -33,8 +34,9 @@ public class StateController extends ABaseControllerGeolocation<State, IStateSer
     }
 
     @Override
-    protected StateDto convertToDto(State entity) {
-        StateDto dto = new StateDto();
+    protected StateResponseDto convertToDto(State entity) {
+        StateResponseDto dto = new StateResponseDto();
+        dto.setId(entity.getId());
         dto.setCode(entity.getCode());
         dto.setName(entity.getName());
         dto.setDescription(entity.getDescription());

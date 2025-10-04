@@ -1,6 +1,6 @@
 \section{Introducción}
-La industria del software demanda calidad, rapidez y sostenibilidad. Las \textit{buenas prácticas} como control de versiones, integración continua \cite{fowler2006continuous}, desarrollo dirigido por pruebas \cite{beck2003testdriven}, y entrega continua \cite{chen2015devops} prometen mejorar resultados, pero su efectividad varía según contexto. 
+La incertidumbre del pasajero—no saber por dónde va el bus o cuánto falta—se reduce al mostrar posiciones en vivo, algo reportado en el transporte urbano por \cite{cityruta2018new} y \cite{stopbus2016new}. UrbanTracker busca eso y, además, facilitar la operación diaria con un panel para rutas, vehículos y conductores.
 
-Este trabajo investiga, de forma aplicada, cómo un conjunto curado de prácticas influye en resultados verificables y en la construcción de un \textit{software funcional}. Siguiendo los principios de código limpio \cite{martin2008clean} y las métricas DORA \cite{dora2021metrics}, evaluamos el impacto de estas prácticas en un proyecto real.
+Para evitar costos de entrada altos, aprovechamos el teléfono del conductor como emisor de GPS cuando el bus no trae equipo dedicado; este enfoque ya ha sido útil en rastreo y seguridad vehicular con mensajería ligera MQTT \cite{stopbus2016new}; \cite{sismo2016}. En paralelo, una API REST clara y documentada evita malentendidos y acelera integraciones \cite{easyrest2022}; \cite{ingenieria2022}.
 
-Nuestras contribuciones son: (1) un protocolo reproducible para aplicar y medir prácticas, (2) un estudio con métricas de proceso y producto basado en \cite{forsgren2018accelerate}, y (3) una guía de lecciones aprendidas para la industria.
+En móviles escogimos React Native por experiencia del equipo, aunque Flutter es una alternativa sólida de alto rendimiento en UI; conviene evaluarla cuando el proyecto crece o cambian los requisitos \cite{flutter2022new}.

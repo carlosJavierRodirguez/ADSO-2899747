@@ -1,50 +1,38 @@
 \section{Implementación del software}
-Describimos arquitectura, decisiones tecnológicas y \textit{pipelines}. Documentamos prácticas aplicadas: formateo, \textit{linting}, pruebas unitarias/integración, análisis estático (SAST), \textit{continuous delivery} y monitoreo. 
+En esta sección se describe cómo quedó implementado UrbanTracker según tus documentos: arquitectura por capas, tecnologías usadas y decisiones que permiten el seguimiento en tiempo real de los buses con una web para usuarios/administración y una app móvil para el conductor (Spring Boot + PostgreSQL, API REST con autenticación JWT, canal en tiempo real por WebSockets/MQTT/Socket.IO, React/Next.js en la web y React Native en móvil). La documentación del API se apoya en OpenAPI para facilitar integración \cite{easyrest2022}. La separación de responsabilidades y el uso de POO se justifican por mantenibilidad \cite{poo2023}. Para datos, se prioriza relacional y se contempla crecer a esquemas híbridos según el volumen de eventos \cite{ingenieria2022}. En transporte urbano, la utilidad de mostrar posiciones en vivo está documentada \cite{cityruta2018new}; \cite{stopbus2016new} y el uso de MQTT en escenarios de rastreo/IoT es común \cite{sismo2016}.
 
 \subsection{Arquitectura del sistema}
-La arquitectura implementada sigue las mejores prácticas de DevOps \cite{forsgren2018accelerate}, integrando automatización en todo el ciclo de desarrollo. La \cref{fig:correlacion_devops} muestra la correlación observada entre el nivel de automatización y el rendimiento del equipo.
+Backend (Spring Boot + PostgreSQL). Expone API REST para las entidades principales (p. ej., rutas, vehículos, conductores y recorridos). La seguridad se maneja con JWT (acceso sin sesiones). La documentación del API se indica con OpenAPI para pruebas e integración \cite{easyrest2022}.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.46\textwidth]{graphics/correlacion_devops.pdf}
-    \caption{Correlación entre nivel de automatización y performance del equipo de desarrollo}
-    \label{fig:correlacion_devops}
-\end{figure}
+Web (React/Next.js).
 
-\subsection{Fragmento de código}
-Ejemplo de implementación de una función con tipado estático:
+Pública: consulta de rutas y visualización del movimiento en el mapa.
 
-\ifminted
-\begin{minted}[linenos]{python}
-def suma(a: int, b: int) -> int:
-    """Suma dos numeros enteros.
-    
-    Args:
-        a: Primer operando
-        b: Segundo operando
-        
-    Returns:
-        La suma de a y b
-    """
-    return a + b
-\end{minted}
-\else
-\begin{lstlisting}[language=Python]
-def suma(a: int, b: int) -> int:
-    """Suma dos numeros enteros.
-    
-    Args:
-        a: Primer operando
-        b: Segundo operando
-        
-    Returns:
-        La suma de a y b
-    """
-    return a + b
-\end{lstlisting}
-\fi
+Administración: CRUD de rutas, vehículos y conductores desde un panel simple.
 
-\subsection{Comparación de tecnologías}
-La selección de tecnologías se basó en criterios objetivos. La \cref{tab:frameworks} presenta una comparación detallada de los frameworks evaluados.
+Móvil (React Native). La app del conductor solicita permisos de ubicación, inicia/finaliza servicio y envía periódicamente posiciones hacia el backend o canal de mensajería (web muestra el movimiento). \cite{stopbus2016new}.
 
-\input{tables/frameworks_comparison.tex}
+Tiempo real (según documento).
+
+WebSockets/Socket.IO para conexión directa y notificaciones rápidas; y/o
+
+MQTT (modelo publish/subscribe) cuando se requiere desacoplar emisores y consumidores, práctica reportada en rastreo vehicular/IoT \cite{sismo2016}.
+
+Datos. Relacional para entidades operativas (PostgreSQL). Si se acumulan grandes trayectorias históricas, tus documentos sugieren evaluar componentes híbridos/NoSQL para consultas analíticas \cite{ingenieria2022}.
+
+Criterio de diseño. Separación por capas y contratos claros (POO) para facilitar mantenimiento y evolución \cite{poo2023}.
+
+Nota: No incluyo CI/CD, SAST, ni otros pipelines porque no están descritos en tus archivos. Si luego los documentas, los añadimos.
+
+\subsection{Comparación de tecnologías (según lo que aparece en tus docs)}
+Backend: Spring Boot (REST) sobre PostgreSQL — por madurez y soporte a patrones de arquitectura por capas \cite{easyrest2022}; \cite{poo2023}.
+
+Frontend web: React/Next.js — ya adoptado en el proyecto, permite una web pública y un panel de administración coherentes.
+
+Móvil: React Native — elección práctica basada en experiencia del equipo y reutilización; Flutter se reconoce como alternativa con buen rendimiento de UI \cite{flutter2022new}.
+
+Canal de tiempo real: WebSockets/Socket.IO para simplicidad; MQTT para escenarios publish/subscribe y múltiples consumidores \cite{sismo2016}.
+
+Datos: Relacional (PostgreSQL) para entidades; evaluar híbrido si crece el histórico de eventos \cite{ingenieria2022}.
+
+Contexto de transporte: mostrar posiciones en vivo mejora la utilidad para el pasajero \cite{cityruta2018new}; \cite{stopbus2016new}.

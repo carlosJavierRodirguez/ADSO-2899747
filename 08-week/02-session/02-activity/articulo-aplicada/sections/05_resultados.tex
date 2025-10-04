@@ -1,29 +1,25 @@
 \section{Evaluación y resultados}
-Definimos un diseño de evaluación basado en las métricas DORA \cite{dora2021metrics} y principios de código limpio \cite{martin2008clean}. Las métricas incluyen: mantenibilidad, defectos por KLOC, tiempo de ciclo, frequency de deployment, y lead time para cambios.
+A continuación se resume cómo evaluamos UrbanTracker y qué observamos en las pruebas. Nos centramos en tres cosas: que las funciones clave se comporten bien (funcional), que el tiempo real sea usable y que el sistema se recupere si hay problemas de red (resiliencia). Las decisiones técnicas (API REST documentada, canal ligero para eventos y separación por capas) van en la misma línea de lo que reporta la literatura en transporte y sistemas híbridos \cite{cityruta2018new}; \cite{stopbus2016new}; \cite{sismo2016}; \cite{easyrest2022}; \cite{ingenieria2022}.
 
-\subsection{Métricas DORA por equipo}
-Los resultados muestran que la aplicación sistemática de TDD \cite{beck2003testdriven} redujo la densidad de defectos en un 40\%. La implementación de CI/CD \cite{fowler2006continuous,chen2015devops} mejoró el lead time de 5 días a 2 horas. 
+\subsection{Diseño de la evaluación}
+Funcional: login de conductor/administrador, elección de ruta, inicio/fin de servicio, CRUD en el panel y visualización en el mapa.
 
-La \cref{fig:metricas_dora} presenta las métricas DORA recolectadas durante el período de evaluación, mostrando variaciones significativas entre equipos.
+Tiempo real: frecuencia de envío desde la app del conductor y latencia extremo a extremo (del teléfono a la pantalla web).
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.48\textwidth]{graphics/metricas_dora.pdf}
-    \caption{Métricas DORA por equipo: frecuencia de deployment y lead time}
-    \label{fig:metricas_dora}
-\end{figure}
+Resiliencia: qué pasa si se pierde la señal, si se revocan permisos de ubicación o si hay reconexiones.
+La separación por capas y tener la API documentada ayudó a reducir fricción al integrar web, móvil y backend \cite{easyrest2022}, y la organización del código siguiendo principios de POO favoreció cambios sin romper lo anterior \cite{poo2023}.
 
-\subsection{Evolución temporal de métricas}
-Siguiendo las recomendaciones de \cite{forsgren2018accelerate}, observamos una correlación positiva entre la frecuencia de deployment y la estabilidad del sistema. La \cref{fig:evolucion_metricas} ilustra la evolución de métricas clave durante el período de estudio.
+\subsection{Métricas observadas}
+Frecuencia de actualización: del orden de ~5 s entre envíos de posición desde la app del conductor.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.48\textwidth]{graphics/evolucion_metricas.pdf}
-    \caption{Evolución temporal de métricas de calidad durante el año 2024}
-    \label{fig:evolucion_metricas}
-\end{figure}
+Latencia extremo a extremo: < 2 s desde que el móvil envía hasta que el usuario lo ve en la web (en 4G estable).
+
+Concurrencia inicial: 50+ clientes suscritos sin degradación visible.
+
+Estos resultados son coherentes con soluciones cercanas en transporte/logística que manejan grandes volúmenes de eventos en vivo \cite{torres2020}; \cite{odesanya2025}; \cite{anyango2025} y con el uso de MQTT como mensajería ligera en contextos vehiculares \cite{sismo2016}.
+
+\subsection{Evolución y resiliencia}
+En sesiones repetidas el mapa se mantuvo estable y, cuando hubo cortes de red, la app del conductor reintentó y siguió enviando posiciones al recuperar conectividad. Mantener el contrato de API claro y separar responsabilidades facilitó depurar problemas y repetir pruebas sin sorpresas \cite{easyrest2022}; \cite{poo2023}. De cara al crecimiento, las guías de sistemas híbridos sirven para decidir si agregar almacenamiento específico cuando se quiera guardar trayectorias históricas \cite{ingenieria2022}.
 
 \subsection{Interpretación de resultados}
-Como advierte \cite{fitzpatrick2017risks}, estos resultados deben interpretarse considerando el contexto específico del proyecto. Se presentan intervalos de confianza cuando aplica y se analiza la significancia práctica siguiendo las mejores prácticas de investigación empírica en ingeniería de software.
-
-Los datos muestran una mejora sostenida en la cobertura de pruebas (del 68\% al 95\%) y una reducción drástica en defectos de producción (de 28 a 4 por mes), mientras que la velocidad del equipo se incrementó consistentemente de 32 a 65 story points por sprint.
+Los valores observados (frecuencia ~5 s, latencia < 2 s y >50 suscriptores) son suficientes para la experiencia que queremos: el pasajero confía en lo que ve y el administrador puede tomar decisiones en el momento. Igual, el desempeño depende del contexto de red y de dónde se despliega el backend/broker \cite{cityruta2018new}; \cite{stopbus2016new}; \cite{ingenieria2022}. Como siguiente paso, tiene sentido instrumentar métricas continuas (series de tiempo) y, si se requiere análisis profundo, evaluar un componente adicional para histórico de eventos.

@@ -1,2 +1,15 @@
 \section{Discusión}
 Interpretamos efectos, generalización y costos/beneficios. Comparamos con literatura y discutimos implicaciones para equipos y decisores.
+\subsection{Comparación con referentes y alternativas}
+UrbanTracker baja la barrera usando smartphones y estándares abiertos. Kbus demuestra que el rastreo puede escalar a millones de eventos diarios \cite{torres2020}. En logística, ver el momento exacto de los movimientos en la nube es clave \cite{odesanya2025}. Nuestro enfoque aterriza esas ideas a un contexto local con presupuesto limitado.
+React Native nos dio velocidad por la curva del equipo; Flutter es una opción competitiva en UI que vale la pena evaluar en etapas posteriores \cite{flutter2022new}.
+
+\subsection{Lecciones y límites}
+La latencia depende más de la red móvil que del stack: alojar backend/broker cerca ayuda. Para batería, ajustar intervalos y umbrales de movimiento. En privacidad, roles, HTTPS y retención limitada protegen a usuarios y conductores \cite{poo2023}.
+
+\subsection{Trabajo futuro}
+• Trayectorias históricas y analítica de patrones.
+• Estimación de tiempos de llegada y alertas.
+• Seguridad reforzada en broker MQTT (auth/filtros) y monitoreo.
+• Pilotos con más conductores para medir batería, datos y experiencia.
+• Comparativa corta entre React Native y Flutter en un módulo equivalente \cite{flutter2022new}.

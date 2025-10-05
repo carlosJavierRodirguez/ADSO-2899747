@@ -1,31 +1,50 @@
-\section{Metodología de investigación aplicada}
-\subsection{Diseño}
-Se empleó un diseño de investigación-acción con ciclos planificar–actuar–observar–reflexionar, complementado con estudio de caso sobre el desarrollo y la puesta en marcha de UrbanTracker. Se fijaron principios (simplicidad, bajo costo, escalabilidad), criterios de éxito (actualización en ~5 s y latencia <2 s del móvil a la web, panel usable) y un plan de evaluación que combinó verificaciones funcionales y mediciones extremo a extremo.
+\section{Metodología}
 
-\subsection{Comparación de metodologías ágiles}
-Para seleccionar prácticas ágiles se realizó una evaluación multi-criterio (claridad de roles, cadencia, facilidad de adopción, riesgo). El resultado inclinó la balanza hacia Scrum (iteraciones cortas, roles definidos) con prácticas de Kanban (flujo visual y límites de WIP) para el trabajo operativo continuo.
+\subsection{Proceso de desarrollo}
+Trabajamos el proyecto por pasos cortos y en iteraciones. Primero definimos qué debía hacer el sistema (a partir del SRS). Después armamos la estructura y repartimos el trabajo por módulos. El orden fue:
 
-\begin{figure}[htbp]
-    \centering
-    % \includegraphics[width=0.45\textwidth]{graphics/comparacion_metodologias.pdf} % Inserta aquí tu gráfico cuando lo tengas
-    \caption{Comparación multi-criterio de metodologías ágiles: Scrum, Kanban y XP}
-    \label{fig:comparacion_metodologias}
-\end{figure}
+backend con servicios REST y la parte de tiempo real,
+
+app móvil del conductor,
+
+web pública para usuarios,
+
+panel para administración.
+Usamos GitHub para versionar el código y coordinarnos. En cada vuelta entregamos algo funcional y lo revisamos en equipo.
+
+\subsection{Enfoque de validación}
+Aplicamos una idea simple: planear → hacer → observar → ajustar. Nos enfocamos en que la actualización fuera rápida (alrededor de 5 s), que la latencia móvil→web fuera menor a 2 s, y que el mapa/panel se entendieran sin enredos. La primera validación fue en Neiva (Colombia) con 1 ruta y 1 vehículo.
+
+\subsection{Arquitectura y módulos (explicado fácil)}
+El backend está organizado en tres partes:
+
+dominio: donde viven las reglas del negocio (rutas, vehículos, etc.),
+
+aplicación: donde ponemos las funciones que se encargan de cada acción (por ejemplo, iniciar un recorrido o procesar una ubicación),
+
+infraestructura: donde conectamos con el mundo exterior: endpoints REST, PostgreSQL y la comunicación en tiempo real.
+
+Para las actualizaciones en vivo usamos un flujo muy directo: el teléfono del conductor envía su ubicación por MQTT a un broker; el backend la recibe, la revisa y la reenvía por WebSockets a la web \cite{sismo2016}. La API está documentada con OpenAPI/Swagger para probar e integrar sin enredos \cite{easyrest2022}. En la web, el mapa está hecho con Mapbox 3D.
 
 \subsection{Datos e instrumentos}
-Se recolectaron issues, pull requests, pipelines de CI, cobertura de pruebas, defectos y notas de revisión. Se prepararon scripts de extracción/limpieza (carpeta code/) y tablas de síntesis (carpeta tables/). La recolección abarcó un período prolongado del ciclo de desarrollo, combinando métricas cuantitativas con observaciones cualitativas del equipo.
+Durante el desarrollo guardamos issues, pull requests y comentarios del equipo. Además, usamos scripts sencillos para generar rutas de prueba (coordenadas) y así verificar el movimiento en el mapa.
 
-\subsection{Procedimiento y validez}
-Se documentaron fases, roles y checkpoints. Para la validez, se consideró:
+\subsection{Pruebas y criterios de aceptación}
+Funcionales: ingreso del conductor, elegir ruta, iniciar/cerrar recorrido, consultar rutas en la web y usar el panel (crear/editar rutas, vehículos y conductores).
 
-Interna: consistencia entre cambios y resultados observados.
+Tiempo real: envíos cada ~5 s desde el móvil y recepción en la web; latencia medida < 2 s en 4G normal.
 
-Externa: aplicabilidad a otras rutas/ciudades con variaciones de conectividad.
+Estabilidad: cortes y reconexiones de red; el móvil intenta de nuevo sin que el usuario haga nada.
 
-De constructo: que las métricas midan lo que declaran medir (p. ej., latencia extremo a extremo).
+Criterios de aceptación: actualización ≤ 10 s, latencia < 2 s, mapa fluido y 5–10 usuarios conectados a la vez sin problemas.
 
-De conclusión: interpretación prudente de las evidencias.
+Estos puntos coinciden con trabajos que recomiendan mensajería ligera para ubicación en vivo y APIs claras para evitar malentendidos \cite{cityruta2018}; \cite{stopbus2016}; \cite{sismo2016}; \cite{easyrest2022}.
 
-Mitigaciones de sesgo: anonimización de datos operativos, criterios de aceptación definidos a priori, registro de decisiones y cambios.
+\subsection{Alcances y límites}
+Lo probado fue un piloto (1 ruta/1 vehículo) y 5–10 clientes web.
 
-Nota sobre el stack y la literatura: el uso de MQTT/WebSockets, APIs documentadas y arquitecturas híbridas se fundamenta en la literatura citada \cite{sismo2016}; \cite{easyrest2022}; \cite{ingenieria2022}, mientras que las comparaciones de herramientas móviles consideran también evidencia reciente en apps multiplataforma \cite{flutter2022new}.
+Los resultados dependen de la calidad de la red y de dónde se despliegue el backend.
+
+Las métricas usadas (frecuencia y latencia) reflejan lo que la gente siente al usar la app.
+
+Para cuidar la validez, dejamos criterios claros antes de probar, registramos decisiones y usamos JWT para proteger el acceso.

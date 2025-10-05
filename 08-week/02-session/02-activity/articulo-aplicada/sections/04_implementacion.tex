@@ -1,38 +1,48 @@
-\section{Implementación del software}
-En esta sección se describe cómo quedó implementado UrbanTracker según tus documentos: arquitectura por capas, tecnologías usadas y decisiones que permiten el seguimiento en tiempo real de los buses con una web para usuarios/administración y una app móvil para el conductor (Spring Boot + PostgreSQL, API REST con autenticación JWT, canal en tiempo real por WebSockets/MQTT/Socket.IO, React/Next.js en la web y React Native en móvil). La documentación del API se apoya en OpenAPI para facilitar integración \cite{easyrest2022}. La separación de responsabilidades y el uso de POO se justifican por mantenibilidad \cite{poo2023}. Para datos, se prioriza relacional y se contempla crecer a esquemas híbridos según el volumen de eventos \cite{ingenieria2022}. En transporte urbano, la utilidad de mostrar posiciones en vivo está documentada \cite{cityruta2018new}; \cite{stopbus2016new} y el uso de MQTT en escenarios de rastreo/IoT es común \cite{sismo2016}.
+\section{Implementación}
 
-\subsection{Arquitectura del sistema}
-Backend (Spring Boot + PostgreSQL). Expone API REST para las entidades principales (p. ej., rutas, vehículos, conductores y recorridos). La seguridad se maneja con JWT (acceso sin sesiones). La documentación del API se indica con OpenAPI para pruebas e integración \cite{easyrest2022}.
+\subsection{Diseño del sistema}
+UrbanTracker está dividido en frontend y backend. En el lado de usuario hay tres piezas:
 
-Web (React/Next.js).
+Web pública para consultar rutas y ver los buses en el mapa.
 
-Pública: consulta de rutas y visualización del movimiento en el mapa.
+App móvil del conductor (React Native) que toma el GPS del teléfono.
 
-Administración: CRUD de rutas, vehículos y conductores desde un panel simple.
+Panel web para administración de rutas, vehículos y conductores.
 
-Móvil (React Native). La app del conductor solicita permisos de ubicación, inicia/finaliza servicio y envía periódicamente posiciones hacia el backend o canal de mensajería (web muestra el movimiento). \cite{stopbus2016new}.
+El backend está hecho en Spring Boot y expone servicios REST. La API está documentada con OpenAPI/Swagger para facilitar pruebas e integración \cite{easyrest2022}.
 
-Tiempo real (según documento).
+\subsection{Arquitectura del backend (hexagonal y modular)}
+El backend sigue una arquitectura hexagonal organizada por módulos.
 
-WebSockets/Socket.IO para conexión directa y notificaciones rápidas; y/o
+domain: reglas del negocio (rutas, vehículos, conductores, recorridos).
 
-MQTT (modelo publish/subscribe) cuando se requiere desacoplar emisores y consumidores, práctica reportada en rastreo vehicular/IoT \cite{sismo2016}.
+application: funciones que se encargan de cada acción del sistema (por ejemplo, iniciar un recorrido o procesar una ubicación recibida).
 
-Datos. Relacional para entidades operativas (PostgreSQL). Si se acumulan grandes trayectorias históricas, tus documentos sugieren evaluar componentes híbridos/NoSQL para consultas analíticas \cite{ingenieria2022}.
+infrastructure: adaptadores que publican REST, hablan con PostgreSQL/JPA y gestionan la comunicación en tiempo real.
 
-Criterio de diseño. Separación por capas y contratos claros (POO) para facilitar mantenimiento y evolución \cite{poo2023}.
+Esta separación ayuda a mantener el código claro y fácil de extender (POO y separación de responsabilidades) \cite{poo2023}.
 
-Nota: No incluyo CI/CD, SAST, ni otros pipelines porque no están descritos en tus archivos. Si luego los documentas, los añadimos.
+\subsection{Aplicaciones de usuario}
+Web pública (React/Next.js): muestra rutas y los buses moviéndose en el mapa, y permite filtros básicos.
 
-\subsection{Comparación de tecnologías (según lo que aparece en tus docs)}
-Backend: Spring Boot (REST) sobre PostgreSQL — por madurez y soporte a patrones de arquitectura por capas \cite{easyrest2022}; \cite{poo2023}.
+Panel administrativo (React/Next.js): alta/edición de rutas, vehículos y conductores, con una vista general de la flota.
 
-Frontend web: React/Next.js — ya adoptado en el proyecto, permite una web pública y un panel de administración coherentes.
+App del conductor (React Native): pide permisos de ubicación, permite iniciar/cerrar recorrido y envía periódicamente su ubicación.
 
-Móvil: React Native — elección práctica basada en experiencia del equipo y reutilización; Flutter se reconoce como alternativa con buen rendimiento de UI \cite{flutter2022new}.
+\subsection{Comunicación en tiempo real}
+El tiempo real funciona con un flujo simple:
 
-Canal de tiempo real: WebSockets/Socket.IO para simplicidad; MQTT para escenarios publish/subscribe y múltiples consumidores \cite{sismo2016}.
+El teléfono del conductor envía su posición por MQTT a un broker.
 
-Datos: Relacional (PostgreSQL) para entidades; evaluar híbrido si crece el histórico de eventos \cite{ingenieria2022}.
+El backend recibe esos mensajes, los revisa y los reenvía por WebSockets a los clientes de la web \cite{sismo2016}.
 
-Contexto de transporte: mostrar posiciones en vivo mejora la utilidad para el pasajero \cite{cityruta2018new}; \cite{stopbus2016new}.
+Este enfoque reduce esperas para el usuario y evita depender de consultas periódicas. La utilidad de mostrar posiciones en vivo está documentada en trabajos previos \cite{cityruta2018}; \cite{stopbus2016}.
+
+\subsection{Base de datos}
+Se usa PostgreSQL para las entidades operativas del sistema (rutas, vehículos, conductores, asignaciones/recorridos). No se guardan trazas de posición en esta etapa.
+
+\subsection{Seguridad y control de acceso}
+El acceso a operaciones de conductor y administración se protege con JWT. Los roles limitan lo que cada perfil puede hacer desde la web o el panel.
+
+\subsection{Integración de mapas}
+Para la visualización se integra Mapbox en modo 3D en la web. Esto ayuda a entender mejor el movimiento de cada bus sobre su ruta y mejora la experiencia de quien consulta.

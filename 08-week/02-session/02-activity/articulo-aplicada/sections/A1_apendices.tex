@@ -1,9 +1,46 @@
 \appendix
-\section{Checklist de reproducibilidad (plantilla)}
+\section{Checklist de reproducibilidad (UrbanTracker)}
 \begin{itemize}[leftmargin=*]
-  \item \textbf{Datos}: fuente, versión, licencias, anonimización.
-  \item \textbf{Código}: repositorio, commit hash, instrucciones de ejecución.
-  \item \textbf{Entorno}: SO, versión de compiladores, dependencias, semillas.
-  \item \textbf{Procedimiento}: pasos exactos para replicar resultados.
-  \item \textbf{Resultados}: tablas/figuras generadas automáticamente en \texttt{build/}.
+  \item \textbf{Datos}:
+    \begin{itemize}
+      \item Piloto en \textbf{Neiva (Colombia)} con \textbf{1 ruta} y \textbf{1 vehículo}.
+      \item Posiciones GPS emitidas desde el \textbf{smartphone del conductor} cada \(\sim\)5 s.
+      \item En esta fase \textbf{no se guardan} trazas de posición.
+    \end{itemize}
+
+  \item \textbf{Código}:
+    \begin{itemize}
+      \item Repositorio: \texttt{https://github.com/AFSB114/UrbanTracker.git}
+      \item Rama: \texttt{dev}
+      \item Ejecución: \textbf{levantar el archivo YML de la raíz con Docker} para subir todos los servicios.
+      \item Variables de entorno usadas:
+        \begin{itemize}
+          \item \texttt{NEXT\_PUBLIC\_MAPBOX\_TOKEN = pk.eyJ1IjoiYWZzYjExNCIsImEiOiJjbWI1bmN2OGYxanloMmlvbjd0dndtb3g5In0.2ON4hP04tvToiU\_p\_IsHbg}
+          \item \texttt{NEXT\_PUBLIC\_API\_URL = http://backend:8080}
+        \end{itemize}
+    \end{itemize}
+
+  \item \textbf{Entorno}:
+    \begin{itemize}
+      \item Java (JDK): \textbf{17}
+      \item Node.js: \textbf{v22.17.0}
+      \item PostgreSQL: \textbf{16}
+      \item Mosquitto: \textbf{imagen de Docker}
+    \end{itemize}
+
+  \item \textbf{Procedimiento}:
+    \begin{enumerate}
+      \item Definir las variables de entorno indicadas.
+      \item Levantar los servicios con Docker usando el \textbf{YML de la raíz}.
+      \item Ver la web y el \textbf{mapa (Mapbox 3D)}.
+      \item Probar envío de ubicaciones desde el móvil del conductor cada \(\sim\)5 s.
+      \item Conectar \textbf{5–10} clientes web y verificar la actualización en vivo.
+    \end{enumerate}
+
+  \item \textbf{Resultados}:
+    \begin{itemize}
+      \item Frecuencia de actualización: \(\sim\)5 s.
+      \item Latencia extremo a extremo (móvil \(\rightarrow\) web): \(< 2\) s (4G).
+      \item Concurrencia validada: \textbf{5–10} clientes conectados sin demoras visibles.
+    \end{itemize}
 \end{itemize}

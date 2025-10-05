@@ -1,0 +1,17 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'build/main_ieee.blg'
+[110] biber-MSWIN64:340> INFO - === 
+[152] Biber.pm:419> INFO - Reading 'build/main_ieee.bcf'
+[278] Biber.pm:979> INFO - Found 7 citekeys in bib section 0
+[293] Biber.pm:4419> INFO - Processing section 0
+[306] Biber.pm:4610> INFO - Looking for bibtex file 'bibliography/references.bib' for section 0
+[395] bibtex.pm:1713> INFO - LaTeX decoding ...
+[418] bibtex.pm:1519> INFO - Found BibTeX data source 'bibliography/references.bib'
+[465] UCollate.pm:68> INFO - Overriding locale 'es-ES' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[466] UCollate.pm:68> INFO - Overriding locale 'es-ES' defaults 'variable = shifted' with 'variable = non-ignorable'
+[466] Biber.pm:4239> INFO - Sorting list 'none/global//global/global' of type 'entry' with template 'none' and locale 'es-ES'
+[473] bbl.pm:660> INFO - Writing 'build/main_ieee.bbl' with encoding 'UTF-8'
+[475] bbl.pm:763> INFO - Output to build/main_ieee.bbl
+[476] Biber.pm:131> WARN - I didn't find a database entry for 'cityruta2018' (section 0)
+[476] Biber.pm:131> WARN - I didn't find a database entry for 'stopbus2016' (section 0)
+[476] Biber.pm:133> INFO - WARNINGS: 2

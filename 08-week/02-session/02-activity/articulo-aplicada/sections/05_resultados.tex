@@ -1,25 +1,34 @@
-\section{Evaluación y resultados}
-A continuación se resume cómo evaluamos UrbanTracker y qué observamos en las pruebas. Nos centramos en tres cosas: que las funciones clave se comporten bien (funcional), que el tiempo real sea usable y que el sistema se recupere si hay problemas de red (resiliencia). Las decisiones técnicas (API REST documentada, canal ligero para eventos y separación por capas) van en la misma línea de lo que reporta la literatura en transporte y sistemas híbridos \cite{cityruta2018new}; \cite{stopbus2016new}; \cite{sismo2016}; \cite{easyrest2022}; \cite{ingenieria2022}.
+\section{Resultados}
 
-\subsection{Diseño de la evaluación}
-Funcional: login de conductor/administrador, elección de ruta, inicio/fin de servicio, CRUD en el panel y visualización en el mapa.
+\subsection{1) Funcionalidades implementadas}
+Web pública: permite buscar rutas y ver en el mapa (Mapbox 3D) los buses que están en servicio. Cada vehículo aparece como un marcador que se mueve automáticamente a medida que llegan nuevas posiciones \cite{cityruta2018}; \cite{stopbus2016}.
 
-Tiempo real: frecuencia de envío desde la app del conductor y latencia extremo a extremo (del teléfono a la pantalla web).
+App del conductor (React Native): el conductor inicia sesión, inicia/cierra recorrido y la app envía su ubicación cada pocos segundos de forma automática.
 
-Resiliencia: qué pasa si se pierde la señal, si se revocan permisos de ubicación o si hay reconexiones.
-La separación por capas y tener la API documentada ayudó a reducir fricción al integrar web, móvil y backend \cite{easyrest2022}, y la organización del código siguiendo principios de POO favoreció cambios sin romper lo anterior \cite{poo2023}.
+Panel administrativo (web): creación y edición de rutas, vehículos y conductores, con una vista general para revisar el estado de la flota.
 
-\subsection{Métricas observadas}
-Frecuencia de actualización: del orden de ~5 s entre envíos de posición desde la app del conductor.
+Estas tres partes funcionan juntas y cubren lo esencial: lo que ve la persona usuaria, lo que hace el conductor y lo que gestiona la administración.
 
-Latencia extremo a extremo: < 2 s desde que el móvil envía hasta que el usuario lo ve en la web (en 4G estable).
+\subsection{2) Desempeño en tiempo real}
+Frecuencia de actualización: alrededor de ~5 segundos entre cada posición que envía el teléfono del conductor.
 
-Concurrencia inicial: 50+ clientes suscritos sin degradación visible.
+Latencia extremo a extremo: < 2 segundos desde que el móvil envía la coordenada hasta que aparece en la web (en 4G normal).
 
-Estos resultados son coherentes con soluciones cercanas en transporte/logística que manejan grandes volúmenes de eventos en vivo \cite{torres2020}; \cite{odesanya2025}; \cite{anyango2025} y con el uso de MQTT como mensajería ligera en contextos vehiculares \cite{sismo2016}.
+Concurrencia inicial: con 5–10 clientes conectados al mismo tiempo, no se observaron demoras visibles.
 
-\subsection{Evolución y resiliencia}
-En sesiones repetidas el mapa se mantuvo estable y, cuando hubo cortes de red, la app del conductor reintentó y siguió enviando posiciones al recuperar conectividad. Mantener el contrato de API claro y separar responsabilidades facilitó depurar problemas y repetir pruebas sin sorpresas \cite{easyrest2022}; \cite{poo2023}. De cara al crecimiento, las guías de sistemas híbridos sirven para decidir si agregar almacenamiento específico cuando se quiera guardar trayectorias históricas \cite{ingenieria2022}.
+Este comportamiento se logra con el flujo simple definido: el móvil publica por MQTT, el backend recibe y reenvía por WebSockets a la web. Esta forma de comunicación ligera coincide con experiencias previas en rastreo con móviles \cite{sismo2016} y con la idea de mostrar posiciones en vivo al pasajero \cite{cityruta2018}; \cite{stopbus2016}.
 
-\subsection{Interpretación de resultados}
-Los valores observados (frecuencia ~5 s, latencia < 2 s y >50 suscriptores) son suficientes para la experiencia que queremos: el pasajero confía en lo que ve y el administrador puede tomar decisiones en el momento. Igual, el desempeño depende del contexto de red y de dónde se despliega el backend/broker \cite{cityruta2018new}; \cite{stopbus2016new}; \cite{ingenieria2022}. Como siguiente paso, tiene sentido instrumentar métricas continuas (series de tiempo) y, si se requiere análisis profundo, evaluar un componente adicional para histórico de eventos.
+\subsection{3) Validación del piloto}
+Alcance: pruebas en Neiva (Colombia) con 1 ruta y 1 vehículo.
+
+Criterios de aceptación verificados: actualización ≤ 10 s (se logró ~5 s), latencia < 2 s, y estabilidad con 5–10 clientes conectados.
+
+Recuperación ante fallos: si se corta la red móvil, la app del conductor reintenta y vuelve a enviar cuando hay señal.
+
+Contar con una API clara (documentada con OpenAPI/Swagger) ayudó a evitar confusiones en las integraciones y a repetir pruebas de forma rápida \cite{easyrest2022}.
+
+\subsection{4) Lo que quedó fuera (para futuras fases)}
+No se implementaron funciones como pagos, reservas o predicción avanzada de llegada. La versión actual se concentró en posición en tiempo real y gestión operativa.
+
+\subsection{5) Resumen}
+UrbanTracker cumple su objetivo: dar visibilidad en vivo del servicio y facilitar la gestión diaria. La experiencia en el mapa es fluida y el panel simplifica tareas clave. Con los resultados del piloto, la solución se ve lista para crecer a más rutas y más vehículos, manteniendo el mismo esquema de comunicación.

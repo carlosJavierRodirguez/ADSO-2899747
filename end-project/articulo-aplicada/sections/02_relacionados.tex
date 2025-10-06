@@ -1,0 +1,25 @@
+\section{Marco teórico y trabajos relacionados}
+
+\subsection{Transporte público y datos en vivo.}
+Diversos proyectos muestran que publicar la posición del bus en tiempo real mejora la percepción del servicio y ayuda a planear mejor el viaje. En trabajos previos como CITY-RUTA y STOPBUS se reporta el valor de ofrecer al pasajero rutas y ubicaciones actualizadas en pantalla \cite{cityruta2018}; \cite{stopbus2016}.
+
+\subsection{Mensajería ligera para tiempo real.}
+En contextos móviles y de IoT, MQTT es muy usado porque los mensajes viajan con poca sobrecarga y se puede ajustar la calidad de servicio (QoS). En rastreo vehicular y seguridad se ha documentado su buen desempeño para enviar posiciones desde teléfonos o dispositivos embebidos, incluso con conectividad limitada \cite{sismo2016}. Este tipo de mensajería encaja bien cuando se necesitan actualizaciones frecuentes de ubicación.
+
+\subsection{APIs claras y mantenibilidad.}
+Definir y documentar la API con OpenAPI/Swagger reduce malentendidos y acelera la integración entre equipos y clientes \cite{easyrest2022}. Además, las publicaciones sobre programación orientada a objetos recomiendan separar responsabilidades, usar contratos claros y evitar dependencias innecesarias para sostener el proyecto en el tiempo \cite{poo2023}. Esto se alinea con una arquitectura hexagonal y modular, donde:
+
+en la capa de dominio viven las reglas del negocio;
+
+en la capa de aplicación se agrupan las funciones que resuelven acciones del sistema (por ejemplo, iniciar un recorrido o procesar una posición);
+
+y en infraestructura están las piezas que hablan con el exterior: los endpoints REST, la conexión con PostgreSQL y la comunicación en tiempo real.
+
+\subsection{Datos y crecimiento.}
+Para este tipo de soluciones, PostgreSQL resulta suficiente para gestionar entidades operativas como rutas, vehículos, conductores y recorridos. Con un buen diseño de tablas e índices se obtiene un rendimiento adecuado sin recurrir a otras familias de bases de datos.
+
+\subsection{Marco móvil y mapas.}
+En el cliente móvil, la elección entre React Native y Flutter depende de la experiencia del equipo y del ecosistema de librerías; ambas opciones son viables para integrar mapas y geolocalización \cite{flutter2022new}. Para la visualización, herramientas como Mapbox permiten mapas 3D y controles interactivos que mejoran la comprensión del movimiento del bus.
+
+\subsection{Síntesis.}
+Los trabajos revisados respaldan: (i) publicar datos en vivo para mejorar la experiencia del pasajero; (ii) usar MQTT u otros canales ligeros para reducir sobrecarga; (iii) documentar la API y mantener una arquitectura modular/hexagonal para facilitar cambios; y (iv) apoyarse en PostgreSQL para las entidades del sistema. El vacío común está en guías prácticas que unan todo esto en contextos locales y de bajo presupuesto. UrbanTracker aporta una receta concreta y validaciones iniciales en ese escenario.

@@ -1,0 +1,34 @@
+\section{Resultados}
+
+\subsection{1) Funcionalidades implementadas}
+Web pública: permite buscar rutas y ver en el mapa (Mapbox 3D) los buses que están en servicio. Cada vehículo aparece como un marcador que se mueve automáticamente a medida que llegan nuevas posiciones \cite{cityruta2018}; \cite{stopbus2016}.
+
+App del conductor (React Native): el conductor inicia sesión, inicia/cierra recorrido y la app envía su ubicación cada pocos segundos de forma automática.
+
+Panel administrativo (web): creación y edición de rutas, vehículos y conductores, con una vista general para revisar el estado de la flota.
+
+Estas tres partes funcionan juntas y cubren lo esencial: lo que ve la persona usuaria, lo que hace el conductor y lo que gestiona la administración.
+
+\subsection{2) Desempeño en tiempo real}
+Frecuencia de actualización: alrededor de ~5 segundos entre cada posición que envía el teléfono del conductor.
+
+Latencia extremo a extremo: < 2 segundos desde que el móvil envía la coordenada hasta que aparece en la web (en 4G normal).
+
+Concurrencia inicial: con 5–10 clientes conectados al mismo tiempo, no se observaron demoras visibles.
+
+Este comportamiento se logra con el flujo simple definido: el móvil publica por MQTT, el backend recibe y reenvía por WebSockets a la web. Esta forma de comunicación ligera coincide con experiencias previas en rastreo con móviles \cite{sismo2016} y con la idea de mostrar posiciones en vivo al pasajero \cite{cityruta2018}; \cite{stopbus2016}.
+
+\subsection{3) Validación del piloto}
+Alcance: pruebas en Neiva (Colombia) con 1 ruta y 1 vehículo.
+
+Criterios de aceptación verificados: actualización ≤ 10 s (se logró ~5 s), latencia < 2 s, y estabilidad con 5–10 clientes conectados.
+
+Recuperación ante fallos: si se corta la red móvil, la app del conductor reintenta y vuelve a enviar cuando hay señal.
+
+Contar con una API clara (documentada con OpenAPI/Swagger) ayudó a evitar confusiones en las integraciones y a repetir pruebas de forma rápida \cite{easyrest2022}.
+
+\subsection{4) Lo que quedó fuera (para futuras fases)}
+No se implementaron funciones como pagos, reservas o predicción avanzada de llegada. La versión actual se concentró en posición en tiempo real y gestión operativa.
+
+\subsection{5) Resumen}
+UrbanTracker cumple su objetivo: dar visibilidad en vivo del servicio y facilitar la gestión diaria. La experiencia en el mapa es fluida y el panel simplifica tareas clave. Con los resultados del piloto, la solución se ve lista para crecer a más rutas y más vehículos, manteniendo el mismo esquema de comunicación.

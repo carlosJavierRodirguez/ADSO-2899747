@@ -1,0 +1,39 @@
+\section{Discusión}
+
+\subsection{Qué confirman los resultados.}
+Lo obtenido muestra que sí es posible mejorar la experiencia del pasajero y dar herramientas útiles a la operación con una plataforma de tiempo real. Ver el bus moverse en el mapa reduce la incertidumbre de espera, tal como señalan trabajos previos en transporte \cite{cityruta2018}; \cite{stopbus2016}. Del lado operativo, tener un panel con rutas, vehículos y conductores en un solo lugar facilita decisiones rápidas.
+
+\subsection{Ajuste al contexto local.}
+UrbanTracker apunta a bajo costo y fácil adopción: se usa el teléfono del conductor como fuente de GPS y tecnologías abiertas (MQTT, WebSockets, REST). Esto evita instalar hardware especializado y hace viable la implementación en ciudades con presupuestos limitados. A diferencia de soluciones que se enfocan solo en el pasajero, aquí también se cubre la gestión diaria.
+
+\subsection{Elecciones técnicas que funcionaron.}
+Tiempo real simple: el móvil publica por MQTT, el backend recibe y reenvía por WebSockets. Con esto se logró ~5 s de actualización y < 2 s de latencia sin complicar la infraestructura \cite{sismo2016}.
+
+Arquitectura hexagonal y modular: separar dominio, aplicación e infraestructura ayudó a mantener el código claro y a introducir cambios sin “romper” lo ya hecho \cite{poo2023}.
+
+API documentada: usar OpenAPI/Swagger redujo malentendidos al integrar web, móvil y backend \cite{easyrest2022}.
+
+Mapa 3D: Mapbox aportó una visual clara del movimiento del bus y mejoró la lectura de la ruta.
+
+\subsection{Precisión y uso del teléfono.}
+El GPS del smartphone dio una precisión suficiente para el objetivo (ubicar el bus en su ruta). El intervalo de ~5 s resultó un buen equilibrio entre fluidez y batería; si más adelante se necesita, se pueden hacer ajustes dinámicos (menos envíos cuando el bus está detenido y más cuando está en movimiento).
+
+\subsection{Seguridad y privacidad.}
+Aunque se muestra la ubicación del vehículo (no del conductor como persona), es importante tratar estos datos con cuidado. Se usó JWT para acceso y se limitó la visibilidad: el público ve la localización del bus; los detalles sensibles quedan para perfiles autorizados. Como práctica general, conviene no conservar recorridos más allá de lo necesario y aplicar medidas básicas de protección en los canales.
+
+\subsection{Límites del piloto.}
+Los resultados vienen de un escenario acotado: 1 ruta, 1 vehículo y 5–10 clientes conectados. El desempeño depende de la calidad de la red y de dónde esté el backend. Aun así, lo observado da una base sólida para crecer.
+
+\subsection{Qué sigue (oportunidades claras).}
+Ampliar cobertura: más rutas y más vehículos para medir con mayor variedad de escenarios.
+
+Métricas continuas: instrumentar mediciones (frecuencia, latencia, reconexiones) para ver tendencias.
+
+Funciones para el usuario: estimación de tiempos de llegada y alertas.
+
+Operación: monitoreo más fino de eventos y salud del sistema.
+
+Móvil: seguir con React Native y, si la escala lo amerita, comparar con Flutter en un módulo puntual \cite{flutter2022new}.
+
+\subsection{Cierre.}
+En conjunto, UrbanTracker se alinea con lo que recomiendan las publicaciones sobre transporte y software práctico: datos en vivo para el pasajero \cite{cityruta2018}; \cite{stopbus2016}, mensajería ligera para mover posiciones \cite{sismo2016} y APIs claras con una arquitectura modular que facilite el mantenimiento \cite{easyrest2022}; \cite{poo2023}. Los resultados del piloto son un buen punto de partida para escalar y agregar funciones sin perder la sencillez de la solución.

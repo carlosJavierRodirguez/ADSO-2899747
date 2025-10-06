@@ -15,7 +15,7 @@ Usamos GitHub para versionar el código y coordinarnos. En cada vuelta entregamo
 \subsection{Enfoque de validación}
 Aplicamos una idea simple: planear → hacer → observar → ajustar. Nos enfocamos en que la actualización fuera rápida (alrededor de 5 s), que la latencia móvil→web fuera menor a 2 s, y que el mapa/panel se entendieran sin enredos. La primera validación fue en Neiva (Colombia) con 1 ruta y 1 vehículo.
 
-\subsection{Arquitectura y módulos (explicado fácil)}
+\subsection{Arquitectura y módulos}
 El backend está organizado en tres partes:
 
 dominio: donde viven las reglas del negocio (rutas, vehículos, etc.),
@@ -25,6 +25,12 @@ aplicación: donde ponemos las funciones que se encargan de cada acción (por ej
 infraestructura: donde conectamos con el mundo exterior: endpoints REST, PostgreSQL y la comunicación en tiempo real.
 
 Para las actualizaciones en vivo usamos un flujo muy directo: el teléfono del conductor envía su ubicación por MQTT a un broker; el backend la recibe, la revisa y la reenvía por WebSockets a la web \cite{sismo2016}. La API está documentada con OpenAPI/Swagger para probar e integrar sin enredos \cite{easyrest2022}. En la web, el mapa está hecho con Mapbox 3D.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{../code/graphics/arquitectura_mqtt.png}
+\caption{Figura 2. Arquitectura general de comunicación (UrbanTracker)}
+\label{fig:arquitectura_mqtt}
+\end{figure}
 
 \subsection{Datos e instrumentos}
 Durante el desarrollo guardamos issues, pull requests y comentarios del equipo. Además, usamos scripts sencillos para generar rutas de prueba (coordenadas) y así verificar el movimiento en el mapa.

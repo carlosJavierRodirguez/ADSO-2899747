@@ -1,0 +1,17 @@
+\section{Conclusiones}
+Se desarrolló e implementó UrbanTracker, una plataforma de geolocalización en tiempo real que integra lo que necesitan usuarios, conductores y administradores en un solo lugar. Con un backend en Spring Boot (arquitectura hexagonal y modular), web en React/Next.js, app de conductor en React Native y mapas Mapbox 3D, la solución cumple su objetivo principal: ver el bus en vivo y gestionar la operación diaria sin depender de hardware costoso.
+
+En las pruebas del piloto (Neiva, 1 ruta/1 vehículo) se alcanzaron actualizaciones ~5 s y latencia < 2 s del teléfono del conductor a la web, cumpliendo con los criterios de aceptación. Esto es coherente con la idea de que mostrar la posición en tiempo real mejora la experiencia del pasajero \cite{cityruta2018}; \cite{stopbus2016}. El uso de WebSockets/MQTT permitió mantener la comunicación fluida, y contar con una API clara documentada con OpenAPI/Swagger simplificó la integración entre componentes \cite{easyrest2022}. Para los datos operativos (rutas, vehículos, conductores y recorridos), PostgreSQL resultó adecuado, en línea con recomendaciones de diseño y mantenibilidad \cite{ingenieria2022}.
+
+En términos de impacto, UrbanTracker ayuda a reducir la incertidumbre de espera en los usuarios y brinda a los administradores una vista centralizada para tomar decisiones rápidas. Además, al aprovechar smartphones y protocolos ligeros, baja la barrera de entrada y favorece la adopción en contextos con presupuesto limitado.
+
+\subsection{Trabajo futuro.}
+Funciones para el usuario: estimación de tiempos de llegada y alertas.
+
+Operación y datos: métricas continuas y, si se requiere, almacenar históricos de recorridos para análisis y planificación.
+
+Seguridad y privacidad: revisar políticas de retención y controles de acceso más finos con JWT.
+
+Escala y usabilidad: ampliar a más rutas/vehículos y realizar pruebas de usabilidad con más personas.
+
+En síntesis, UrbanTracker demuestra que es viable y útil implementar una plataforma de seguimiento en tiempo real para el transporte público con tecnologías accesibles, manteniendo una base sólida para crecer y sumar capacidades \cite{cityruta2018}; \cite{stopbus2016}; \cite{easyrest2022}; \cite{ingenieria2022}.

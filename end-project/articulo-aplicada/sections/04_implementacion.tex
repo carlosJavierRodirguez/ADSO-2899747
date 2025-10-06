@@ -1,0 +1,48 @@
+\section{Implementación}
+
+\subsection{Diseño del sistema}
+UrbanTracker está dividido en frontend y backend. En el lado de usuario hay tres piezas:
+
+Web pública para consultar rutas y ver los buses en el mapa.
+
+App móvil del conductor (React Native) que toma el GPS del teléfono.
+
+Panel web para administración de rutas, vehículos y conductores.
+
+El backend está hecho en Spring Boot y expone servicios REST. La API está documentada con OpenAPI/Swagger para facilitar pruebas e integración \cite{easyrest2022}.
+
+\subsection{Arquitectura del backend (hexagonal y modular)}
+El backend sigue una arquitectura hexagonal organizada por módulos.
+
+domain: reglas del negocio (rutas, vehículos, conductores, recorridos).
+
+application: funciones que se encargan de cada acción del sistema (por ejemplo, iniciar un recorrido o procesar una ubicación recibida).
+
+infrastructure: adaptadores que publican REST, hablan con PostgreSQL/JPA y gestionan la comunicación en tiempo real.
+
+Esta separación ayuda a mantener el código claro y fácil de extender (POO y separación de responsabilidades) \cite{poo2023}.
+
+\subsection{Aplicaciones de usuario}
+Web pública (React/Next.js): muestra rutas y los buses moviéndose en el mapa, y permite filtros básicos.
+
+Panel administrativo (React/Next.js): alta/edición de rutas, vehículos y conductores, con una vista general de la flota.
+
+App del conductor (React Native): pide permisos de ubicación, permite iniciar/cerrar recorrido y envía periódicamente su ubicación.
+
+\subsection{Comunicación en tiempo real}
+El tiempo real funciona con un flujo simple:
+
+El teléfono del conductor envía su posición por MQTT a un broker.
+
+El backend recibe esos mensajes, los revisa y los reenvía por WebSockets a los clientes de la web \cite{sismo2016}.
+
+Este enfoque reduce esperas para el usuario y evita depender de consultas periódicas. La utilidad de mostrar posiciones en vivo está documentada en trabajos previos \cite{cityruta2018}; \cite{stopbus2016}.
+
+\subsection{Base de datos}
+Se usa PostgreSQL para las entidades operativas del sistema (rutas, vehículos, conductores, asignaciones/recorridos). No se guardan trazas de posición en esta etapa.
+
+\subsection{Seguridad y control de acceso}
+El acceso a operaciones de conductor y administración se protege con JWT. Los roles limitan lo que cada perfil puede hacer desde la web o el panel.
+
+\subsection{Integración de mapas}
+Para la visualización se integra Mapbox en modo 3D en la web. Esto ayuda a entender mejor el movimiento de cada bus sobre su ruta y mejora la experiencia de quien consulta.
